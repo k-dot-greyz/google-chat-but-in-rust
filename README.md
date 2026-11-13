@@ -2,7 +2,7 @@
 
 Fork of [k-dot-greyz/rust-app-core](https://github.com/k-dot-greyz/rust-app-core) at `6523b791`. The hull is the frontend and the gate. This tree does not add a card kind, a pipe step, or a crate.
 
-Start with [docs/WHITEPAPER.md](docs/WHITEPAPER.md), then [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). The three scenarios are [docs/FLOWS.md](docs/FLOWS.md). Requirements are the files in [requirements/](requirements/). Agents read [AGENTS.md](AGENTS.md) and [CODEOWNERS](CODEOWNERS).
+Start with [docs/BIBLE.md](docs/BIBLE.md). It is the map. The tests and the Rust types win if they disagree with it.
 
 | | State |
 | --- | --- |

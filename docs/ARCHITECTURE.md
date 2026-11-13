@@ -30,6 +30,7 @@ google-chat-but-in-rust/
     hull.rs                 dispatch
     http.rs server.rs       inbound only. default bind is loopback.
   requirements/             the reqs. status green or red matches the tests.
+  docs/BIBLE.md              map. tests win if it drifts
   docs/                     whitepaper, this file, flows, plugins, integrations
   tests/
     flow.rs                 shell still works, as the shell profile

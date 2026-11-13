@@ -9,7 +9,7 @@ codeowners: "CODEOWNERS"
 
 # Agent session
 
-This file is the frontmatter for work in this repo. It is not a prompt to widen the product.
+This file is the frontmatter for work in this repo. It is not a prompt to widen the product. The map is [docs/BIBLE.md](docs/BIBLE.md). If it disagrees with a test, the test wins.
 
 ## Before editing
 
