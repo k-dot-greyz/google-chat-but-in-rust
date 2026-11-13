@@ -39,6 +39,7 @@ done
 
 for path in \
   docs/INDEX.md docs/LOG.md docs/BIBLE.md docs/CI.md \
+  docs/SITREP.md docs/META.md \
   docs/WHITEPAPER.md docs/ARCHITECTURE.md docs/FLOWS.md \
   docs/PLUGINS.md docs/INTEGRATIONS.md \
   SPEC.md AGENTS.md CONTRIBUTING.md CODEOWNERS \
@@ -55,6 +56,7 @@ done
 
 for path in \
   docs/INDEX.md docs/LOG.md docs/BIBLE.md docs/CI.md \
+  docs/SITREP.md docs/META.md \
   docs/WHITEPAPER.md docs/ARCHITECTURE.md docs/FLOWS.md \
   docs/PLUGINS.md docs/INTEGRATIONS.md \
   SPEC.md AGENTS.md CONTRIBUTING.md \

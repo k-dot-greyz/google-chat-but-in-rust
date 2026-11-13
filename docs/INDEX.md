@@ -35,6 +35,8 @@ If this index, the bible, and a test disagree, the test wins. Then fix the index
 | Path | Status | What it is |
 | --- | --- | --- |
 | [docs/CI.md](CI.md) | reference | Review methodology. `scripts/verify.sh`, CodeQL. |
+| [docs/SITREP.md](SITREP.md) | reference | Module sitrep as of `17bc1be`. |
+| [docs/META.md](META.md) | reference | Audit verdict. Four open findings, none fixed here. |
 | [docs/LOG.md](LOG.md) | reference | Append-only intent and reasoning log. |
 | [docs/BIBLE.md](BIBLE.md) | reference | Big picture, task order, test prose, open changes. |
 | [docs/WHITEPAPER.md](WHITEPAPER.md) | reference | Why the hull is the record and Chat is the glass. |
