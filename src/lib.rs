@@ -12,6 +12,7 @@ pub mod load;
 pub mod radio;
 mod render;
 pub mod schema;
+pub mod session;
 pub mod sync;
 
 #[cfg(not(target_arch = "wasm32"))]

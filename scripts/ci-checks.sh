@@ -44,6 +44,7 @@ for path in \
   SPEC.md AGENTS.md CONTRIBUTING.md CODEOWNERS \
   requirements/TOOLCHAIN.md requirements/FR-GATE.md \
   requirements/FR-1.md requirements/FR-2.md requirements/FR-3.md \
+  requirements/FR-SESSION.md \
   modules/profiles.json modules/policy.json \
   src/gate.rs src/airlock.rs src/schema.rs src/radio.rs \
   tests/gate.rs tests/flow.rs tests/radio_factory.rs tests/radio_fr.rs \
@@ -58,7 +59,7 @@ for path in \
   docs/PLUGINS.md docs/INTEGRATIONS.md \
   SPEC.md AGENTS.md CONTRIBUTING.md \
   requirements/TOOLCHAIN.md requirements/FR-GATE.md \
-  requirements/FR-1.md requirements/FR-2.md requirements/FR-3.md
+  requirements/FR-1.md requirements/FR-2.md requirements/FR-3.md requirements/FR-SESSION.md
 do
   head -n 16 "$path" | grep -q '^status:' || fail "${path} has no status"
   head -n 16 "$path" | grep -q '^index: docs/INDEX.md' || fail "${path} is not wired to the index"

@@ -8,7 +8,7 @@ toolchain_floor: "1.100.0"
 
 # Hull — pre-release reference
 
-Rust floor **1.100.0** (stable, 2026-11-12). The workspace compiler must match `rust-toolchain.toml`. `Cargo.toml` has an empty `[dependencies]`. A crate is not allowed until a requirement names it, and the adopted version is the latest stable on that day, recorded as a new floor. This file is the contract the tree has to match. Cards, pipes, and policy are JSON under `modules/`. Profile allowlists are `modules/profiles.json`, compiled in, not watched. The page is server-rendered. `assets/island.js` only applies a view the server already computed.
+Rust floor **1.100.0** (stable, 2026-11-12). The workspace compiler must match `rust-toolchain.toml`. `Cargo.toml` has an empty `[dependencies]`. A crate is not allowed until a requirement names it, and the adopted version is the latest stable on that day, recorded as a new floor. This file is the contract the tree has to match. Cards, pipes, and policy are JSON under `modules/`. Profile allowlists are `modules/profiles.json`, compiled in, not watched. The page is server-rendered. `assets/island.js` only applies a view the server already computed. `QUERY` is accepted on `/api/channels/{channel}` and nowhere else. The filter is the body. A session id is `x-session`, never a query parameter.
 
 ## Contract
 

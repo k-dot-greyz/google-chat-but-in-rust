@@ -41,6 +41,7 @@ Do not add a hand-written JSON Schema for cards. `schema::validate_card` is that
 | Rust 1.100.0, edition 2024, empty `[dependencies]` | Floor. `scripts/verify.sh` enforces it, plus fmt, clippy, and the red FR check. |
 | Deck, pipes, airlock, dry dock | Green. `tests/flow.rs`. |
 | Profile gate | Green. `tests/gate.rs`. |
+| Session and QUERY | Green. Memory only. `tests/session.rs`. |
 | Factory (3 + 3, no n8n) | Green. `tests/radio_factory.rs`. |
 | FR-1 ingest and approve | Red. `NotImplemented`. |
 | FR-2 file an issue | Red. `NotImplemented`. |

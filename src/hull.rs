@@ -9,6 +9,7 @@ use crate::json::{self, Number, Value};
 use crate::load::{self, Bundle, Direction, Pipe, Step};
 use crate::render;
 use crate::schema::{self, Kind};
+use crate::session::{self, Store};
 use crate::sync::{Patch, Tape};
 
 const CARD_CAP: usize = 32;
@@ -26,6 +27,7 @@ pub struct Hull {
     fault: Option<String>,
     notice: String,
     verdict: Option<Value>,
+    sessions: Store,
 }
 
 struct Fault {
@@ -76,7 +78,9 @@ impl Hull {
         match load::from_dir(path) {
             Ok(bundle) if bundle.epoch == self.epoch => self.fault = None,
             Ok(bundle) => {
+                let sessions = std::mem::take(&mut self.sessions);
                 *self = Self::from_bundle(bundle, None);
+                self.sessions = sessions;
                 self.notice = "Modules reloaded from disk.".into();
             }
             Err(detail) => self.fault = Some(detail),
@@ -95,6 +99,7 @@ impl Hull {
             fault,
             notice: String::new(),
             verdict: None,
+            sessions: Store::default(),
         }
     }
 
@@ -154,6 +159,13 @@ impl Hull {
             ("GET", ["api", "pipeline"]) => self.pipeline_json(),
             ("GET", ["api", "sync", "handshake"]) => self.handshake(),
             ("GET", ["api", "sync", "delta"]) => self.delta(request),
+            ("POST", ["api", "sessions"]) => self.mint_session(request),
+            ("DELETE", ["api", "sessions"]) => self.revoke_session(request),
+            ("QUERY", ["api", "channels", channel]) => self.channel_query(request, channel),
+            ("GET", ["api", "providers"]) => self.providers(),
+            (_, ["api", "sessions"]) => method_not_allowed("POST, DELETE"),
+            (_, ["api", "channels", _]) => method_not_allowed("QUERY"),
+            (_, ["api", "providers"]) => method_not_allowed("GET"),
             _ => self.miss(request),
         };
         if head {
@@ -476,6 +488,164 @@ impl Hull {
             self.push(id, &body)
         })();
         self.settle(request, before, result)
+    }
+
+    fn mint_session(&mut self, request: &Request) -> Response {
+        let profile = match gate::identify(request) {
+            Ok(profile) => profile,
+            Err(denied) => return closed(denied.status, denied.code, &denied.detail),
+        };
+        let body = match json_object(request) {
+            Ok(body) => body,
+            Err(response) => return response,
+        };
+        if body_keys_unknown(&body, &["channel", "provider"]) {
+            return closed(422, "schema", "Unknown field.");
+        }
+        let Some(channel) = body.get("channel").and_then(Value::as_str) else {
+            return closed(422, "schema", "channel is required.");
+        };
+        if channel.is_empty() {
+            return closed(422, "schema", "channel is required.");
+        }
+        let provider = body
+            .get("provider")
+            .and_then(Value::as_str)
+            .unwrap_or("local");
+        if provider != "local" {
+            return closed(
+                501,
+                "provider",
+                "That provider is not on the hull. The local provider was not used instead.",
+            );
+        }
+        if !gate::may_io(&profile, channel, gate::Io::Query) {
+            return closed(403, "scope", "That profile cannot query this channel.");
+        }
+        let Some(entropy) = entropy() else {
+            return closed(503, "entropy", "No session was minted.");
+        };
+        match self.sessions.mint(&profile.id, channel, now_ms(), entropy) {
+            Ok(issued) => {
+                let status = if issued.reused { 200 } else { 201 };
+                closed_ok(
+                    status,
+                    obj(vec![
+                        ("ok", Value::Bool(true)),
+                        ("retry", Value::Bool(false)),
+                        ("session", Value::String(issued.id)),
+                        ("profile", Value::String(issued.profile)),
+                        ("channel", Value::String(issued.channel)),
+                        ("expires_at", json_i64(issued.expires_at as i64)),
+                    ]),
+                )
+            }
+            Err(session::Fault::Unavailable) => closed(
+                503,
+                "busy",
+                "No session slot is free. A live session was kept.",
+            ),
+            Err(session::Fault::Unauthorized) => {
+                closed(401, "session", "That session is not on the hull.")
+            }
+        }
+    }
+
+    fn revoke_session(&mut self, request: &Request) -> Response {
+        let Some(id) = one_session(request) else {
+            return closed(401, "session", "That session is not on the hull.");
+        };
+        match self.sessions.revoke(&id, now_ms()) {
+            Ok(()) => closed_ok(
+                200,
+                obj(vec![
+                    ("ok", Value::Bool(true)),
+                    ("retry", Value::Bool(false)),
+                ]),
+            ),
+            Err(_) => closed(401, "session", "That session is not on the hull."),
+        }
+    }
+
+    fn channel_query(&mut self, request: &Request, channel: &str) -> Response {
+        if !request.query.is_empty() {
+            return closed(400, "query", "A query does not take a query string.");
+        }
+        let Some(id) = one_session(request) else {
+            return closed(401, "session", "That session is not on the hull.");
+        };
+        let Ok((profile_id, bound)) = self.sessions.resume(&id, now_ms()) else {
+            return closed(401, "session", "That session is not on the hull.");
+        };
+        if let Some(claimed) = request.header("x-profile")
+            && claimed != profile_id
+        {
+            return closed(401, "session", "That session is not on the hull.");
+        }
+        if bound != channel {
+            return closed(403, "scope", "That session is not for this channel.");
+        }
+        let Some(profile) = gate::profiles()
+            .into_iter()
+            .find(|item| item.id == profile_id)
+        else {
+            return closed(401, "session", "That session is not on the hull.");
+        };
+        if !gate::may_io(&profile, channel, gate::Io::Query) {
+            return closed(403, "scope", "That profile cannot query this channel.");
+        }
+        let body = match json_object(request) {
+            Ok(body) => body,
+            Err(response) => return response,
+        };
+        if body_keys_unknown(&body, &["select"]) {
+            return closed(422, "schema", "Unknown field.");
+        }
+        let select = match select_of(&body) {
+            Ok(select) => select,
+            Err(response) => return response,
+        };
+        let cards = Value::Array(
+            self.cards
+                .iter()
+                .map(|card| {
+                    let mut pairs = Vec::new();
+                    for field in &select {
+                        let value = card.get(field).cloned().unwrap_or(Value::Null);
+                        pairs.push((field.clone(), value));
+                    }
+                    Value::Object(pairs)
+                })
+                .collect(),
+        );
+        closed_ok(
+            200,
+            obj(vec![
+                ("ok", Value::Bool(true)),
+                ("retry", Value::Bool(false)),
+                ("channel", Value::String(channel.to_string())),
+                ("profile", Value::String(profile_id)),
+                ("cards", cards),
+            ]),
+        )
+    }
+
+    fn providers(&self) -> Response {
+        closed_ok(
+            200,
+            obj(vec![
+                ("ok", Value::Bool(true)),
+                ("retry", Value::Bool(false)),
+                (
+                    "providers",
+                    Value::Array(vec![Value::Object(vec![
+                        ("id".into(), Value::String("local".into())),
+                        ("send".into(), Value::Bool(false)),
+                        ("retry".into(), Value::Bool(false)),
+                    ])]),
+                ),
+            ]),
+        )
     }
 
     fn settle(&mut self, request: &Request, before: u64, result: Result<(), Fault>) -> Response {
@@ -1120,6 +1290,127 @@ fn edge(from: &str, to: &str, via: &str) -> Value {
         ("to", Value::String(to.into())),
         ("via", Value::String(via.into())),
     ])
+}
+
+fn method_not_allowed(allow: &str) -> Response {
+    let mut response = closed(405, "method", "That method is not allowed on this route.");
+    response.headers.push(("allow".into(), allow.into()));
+    response
+}
+
+fn closed(status: u16, code: &str, detail: &str) -> Response {
+    closed_ok(
+        status,
+        obj(vec![
+            ("ok", Value::Bool(false)),
+            ("retry", Value::Bool(false)),
+            (
+                "error",
+                obj(vec![
+                    ("code", Value::String(code.into())),
+                    ("detail", Value::String(detail.into())),
+                ]),
+            ),
+        ]),
+    )
+    .code(code)
+}
+
+fn closed_ok(status: u16, value: Value) -> Response {
+    Response::json(status, &value).code("ok")
+}
+
+fn json_object(request: &Request) -> Result<Value, Response> {
+    let json = request
+        .header("content-type")
+        .is_some_and(|value| value.starts_with("application/json"));
+    if !json {
+        return Err(closed(415, "type", "The body must be JSON."));
+    }
+    let text = std::str::from_utf8(&request.body)
+        .map_err(|_| closed(400, "bad_request", "The body is not utf-8."))?;
+    let value = json::parse(text)
+        .map_err(|error| closed(400, "json", &http::json_error_message(&error)))?;
+    if !matches!(value, Value::Object(_)) {
+        return Err(closed(422, "schema", "The body must be an object."));
+    }
+    Ok(value)
+}
+
+fn body_keys_unknown(body: &Value, allowed: &[&str]) -> bool {
+    let Value::Object(pairs) = body else {
+        return true;
+    };
+    pairs
+        .iter()
+        .any(|(key, _)| !allowed.contains(&key.as_str()))
+}
+
+fn select_of(body: &Value) -> Result<Vec<String>, Response> {
+    let Some(value) = body.get("select") else {
+        return Err(closed(422, "schema", "select is required."));
+    };
+    let Value::Array(items) = value else {
+        return Err(closed(422, "schema", "select must be an array."));
+    };
+    if items.is_empty() || items.len() > 3 {
+        return Err(closed(422, "schema", "select is the wrong length."));
+    }
+    let mut out = Vec::new();
+    for item in items {
+        let Some(field) = item.as_str() else {
+            return Err(closed(422, "schema", "select entries are strings."));
+        };
+        if !matches!(field, "id" | "title" | "kind") || out.iter().any(|seen| seen == field) {
+            return Err(closed(
+                422,
+                "schema",
+                "select has a field this query cannot return.",
+            ));
+        }
+        out.push(field.to_string());
+    }
+    Ok(out)
+}
+
+fn one_session(request: &Request) -> Option<String> {
+    let values: Vec<&str> = request
+        .headers
+        .iter()
+        .filter(|(name, _)| name == "x-session")
+        .map(|(_, value)| value.as_str())
+        .collect();
+    let [value] = values.as_slice() else {
+        return None;
+    };
+    if session::looks_like_id(value) {
+        Some((*value).to_string())
+    } else {
+        None
+    }
+}
+
+fn now_ms() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|duration| duration.as_millis() as u64)
+        .unwrap_or(0)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn entropy() -> Option<[u8; 16]> {
+    use std::io::Read;
+    let mut bytes = [0u8; 16];
+    std::fs::File::open("/dev/urandom")
+        .ok()?
+        .read_exact(&mut bytes)
+        .ok()?;
+    Some(bytes)
+}
+
+#[cfg(target_arch = "wasm32")]
+fn entropy() -> Option<[u8; 16]> {
+    None
 }
 
 fn obj(pairs: Vec<(&str, Value)>) -> Value {

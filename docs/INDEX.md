@@ -8,7 +8,7 @@ phase: 1
 toolchain_floor: "1.100.0"
 log: docs/LOG.md
 upstream: https://github.com/k-dot-greyz/google-chat-but-in-rust
-checked: "2026-11-13T17:36:00+02:00"
+checked: "2026-11-13T17:58:00+02:00"
 ---
 
 # Reference index
@@ -47,6 +47,7 @@ If this index, the bible, and a test disagree, the test wins. Then fix the index
 | [requirements/FR-GATE.md](../requirements/FR-GATE.md) | green | Profile scope. Tests in `tests/gate.rs`. |
 | [requirements/FR-1.md](../requirements/FR-1.md) | red | Ingest and button approve. |
 | [requirements/FR-2.md](../requirements/FR-2.md) | red | One installation, one repo. |
+| [requirements/FR-SESSION.md](../requirements/FR-SESSION.md) | green | Local session, channel IO, HTTP QUERY. |
 | [requirements/FR-3.md](../requirements/FR-3.md) | red | Model route. Change the token shape before implementing. |
 | [AGENTS.md](../AGENTS.md) | reference | Session instructions. |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | reference | What a change must do. |
@@ -102,5 +103,6 @@ Re-read the latest Rust release at the start of a session. Append [docs/LOG.md](
 - A later log is one insert-only `STRICT` transition table. Wall-clock time is not in the hash. The tip hash is the only future anchor, and it stays dry-docked.
 - No blockchain, merkle tree, wallet, or empty config file ahead of a parser.
 - Pull requests run `scripts/verify.sh` and CodeQL (`security-extended`, Rust, no build). Clippy `-D warnings` is the type gate. The gate tests are the auth gate.
+- A session is memory-only and binds one profile to one channel. HTTP `QUERY` carries the filter in the body. A failed provider or a mismatched profile does not fall back to a wider read.
 
 The reasoning for each line is in [docs/LOG.md](LOG.md), in order.

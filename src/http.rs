@@ -32,7 +32,7 @@ impl Request {
         let method = method.to_ascii_uppercase();
         if !matches!(
             method.as_str(),
-            "GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS"
+            "GET" | "HEAD" | "POST" | "PUT" | "PATCH" | "DELETE" | "OPTIONS" | "QUERY"
         ) {
             return Err("method not accepted".into());
         }
@@ -101,6 +101,7 @@ pub struct Response {
     pub status: u16,
     pub headers: Vec<(String, String)>,
     pub body: Vec<u8>,
+    pub code: String,
 }
 
 impl Response {
@@ -152,7 +153,12 @@ impl Response {
                 ]),
             ),
         ]);
-        Self::json(status, &value)
+        Self::json(status, &value).code(code)
+    }
+
+    pub fn code(mut self, code: &str) -> Self {
+        self.code = code.to_string();
+        self
     }
 
     pub fn text(&self) -> String {
@@ -167,6 +173,7 @@ impl Response {
     fn with(status: u16, content_type: &str, body: Vec<u8>, cache: &str) -> Self {
         Self {
             status,
+            code: "ok".into(),
             headers: vec![
                 ("content-type".into(), content_type.into()),
                 ("cache-control".into(), cache.into()),
@@ -211,9 +218,11 @@ fn status_ok() -> u16 {
 pub fn reason(status: u16) -> &'static str {
     match status {
         200 => "OK",
+        201 => "Created",
         204 => "No Content",
         303 => "See Other",
         400 => "Bad Request",
+        401 => "Unauthorized",
         403 => "Forbidden",
         404 => "Not Found",
         405 => "Method Not Allowed",
@@ -223,6 +232,7 @@ pub fn reason(status: u16) -> &'static str {
         415 => "Unsupported Media Type",
         422 => "Unprocessable Content",
         500 => "Internal Server Error",
+        501 => "Not Implemented",
         503 => "Service Unavailable",
         _ => "Status",
     }
@@ -315,7 +325,7 @@ pub fn try_parse(buf: &[u8]) -> Parse {
     let body_len = match content_length {
         Some(len) => len,
         None => {
-            if matches!(method, "POST" | "PUT" | "PATCH") {
+            if matches!(method, "POST" | "PUT" | "PATCH" | "QUERY") {
                 return Parse::Err(HttpError::LengthRequired);
             }
             0

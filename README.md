@@ -8,6 +8,7 @@ Start with [docs/INDEX.md](docs/INDEX.md). It is the enforced catalog. [docs/BIB
 | --- | --- |
 | Toolchain | Rust 1.100.0 floor, edition 2024, zero crates |
 | Gate | Green. Seven profiles, compiled in. |
+| Session | Green. Local, memory, one channel. HTTP QUERY. |
 | FR-1 ingest | Red |
 | FR-2 git | Red |
 | FR-3 model route | Red |

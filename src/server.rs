@@ -56,31 +56,40 @@ fn handle(mut stream: TcpStream, hull: &Mutex<Hull>) {
             let dispatched =
                 std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| guard.dispatch(&request)));
             match dispatched {
-                Ok(response) => response,
+                Ok(response) => {
+                    log(&request.method, &request.path, &response);
+                    response
+                }
                 Err(_) => {
-                    Response::fail(500, "panic", "The hull caught a panic and kept the rest.")
+                    let response =
+                        Response::fail(500, "panic", "The hull caught a panic and kept the rest.");
+                    log(&request.method, &request.path, &response);
+                    response
                 }
             }
         }
-        Err(error) => match error {
-            HttpError::TooLarge => Response::fail(
-                413,
-                "too_large",
-                "That body does not fit through the hatch.",
-            ),
-            HttpError::LengthRequired => {
-                Response::fail(411, "length", "Content-Length is required.")
-            }
-            HttpError::Unsupported => {
-                Response::fail(400, "encoding", "Chunked bodies are not accepted.")
-            }
-            HttpError::Incomplete => {
-                Response::fail(400, "incomplete", "The request stopped short.")
-            }
-            HttpError::Bad(detail) => Response::fail(400, "bad_request", &detail),
-        },
+        Err(error) => {
+            let response = match error {
+                HttpError::TooLarge => Response::fail(
+                    413,
+                    "too_large",
+                    "That body does not fit through the hatch.",
+                ),
+                HttpError::LengthRequired => {
+                    Response::fail(411, "length", "Content-Length is required.")
+                }
+                HttpError::Unsupported => {
+                    Response::fail(400, "encoding", "Chunked bodies are not accepted.")
+                }
+                HttpError::Incomplete => {
+                    Response::fail(400, "incomplete", "The request stopped short.")
+                }
+                HttpError::Bad(detail) => Response::fail(400, "bad_request", &detail),
+            };
+            log("-", "-", &response);
+            response
+        }
     };
-    eprintln!("hull {} {}", response.status, response.body.len());
     let _ = write_all(&stream, &response.encode());
 }
 
@@ -104,6 +113,12 @@ fn read_request(stream: &mut TcpStream) -> Result<http::Request, HttpError> {
     }
 }
 
+fn log(method: &str, path: &str, response: &Response) {
+    eprintln!(
+        "hull method={method} path={path} status={} code={}",
+        response.status, response.code
+    );
+}
 fn write_all(mut stream: &TcpStream, bytes: &[u8]) -> std::io::Result<()> {
     stream.write_all(bytes)
 }

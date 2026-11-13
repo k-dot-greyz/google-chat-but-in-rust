@@ -18,6 +18,7 @@ toolchain_floor: "1.100.0"
 | Reference index | `scripts/ci-checks.sh` | Every catalog file exists, has `status` and `index: docs/INDEX.md`, and every relative link in the index resolves. The log stays `append_only`. |
 | Empty crate list | `scripts/ci-checks.sh` | `[dependencies]` has no crate. `serde`, `sqlx`, `rusqlite`, `nutype`, and `schemars` are refused by name. |
 | Auth | `scripts/ci-checks.sh` and `tests/gate.rs` | Seven profile ids. The four write routes call `admit_request`. The bearer, query-secret, missing-profile, duplicate-header, and cross-profile tests are still in the file, and they pass. |
+| Session | `tests/session.rs` | Local mint, reuse, revoke, QUERY without a query string, no provider fallback, no profile fallback. |
 | Format | `cargo fmt --check` | The tree matches rustfmt for edition 2024. |
 | Types | `cargo clippy --all-targets -- -D warnings` | No warning. This is the type-safety gate. It is not a generated JSON Schema. |
 | Green suite | `cargo test`, FR names skipped | Hull, gate, factory, and serve stay green. |
