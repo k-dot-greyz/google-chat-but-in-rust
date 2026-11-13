@@ -105,5 +105,14 @@ Append only. A new decision goes at the bottom with a timestamp. Do not edit a p
 
 **Built.** `docs/SITREP.md` and `docs/META.md`.
 
+## 2026-11-13T18:32:00+02:00
+
+**Intent.** Correct two sentences CodeRabbit marked on the meta review.
+
+**Reasoning.** `scripts/verify.sh` only requires a nonzero exit and the substring `NotImplemented`. It does not require all nine FR tests to fail. A credential header does not cause `401` when `x-profile` is valid. The request is admitted. Both sentences overstated the gate.
+
+**Built.** Wording in `docs/META.md` only.
+
+
 
 

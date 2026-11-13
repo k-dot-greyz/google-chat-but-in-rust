@@ -13,7 +13,7 @@ The hull is a loopback record with a dry dock, not a chat client and not an auto
 
 ## What is holding
 
-The JSON parser, the card schema, and the profile table are the law, and they agree with the tests. Writes go through `gate::admit` before the body is trusted. `QUERY` keeps the filter in the body. A remote provider does not fall back to `local`. A session whose `x-profile` disagrees returns `401` and no cards. The factory test fails if `n8n` appears as a sink. `scripts/verify.sh` fails if the red suite turns green for the wrong reason, or at all, before the requirement is real. CodeQL on Rust with `build-mode: none` is required and has passed.
+The JSON parser, the card schema, and the profile table are the law, and they agree with the tests. Writes go through `gate::admit` before the body is trusted. `QUERY` keeps the filter in the body. A remote provider does not fall back to `local`. A session whose `x-profile` disagrees returns `401` and no cards. The factory test fails if `n8n` appears as a sink. `scripts/verify.sh` fails the run when `tests/radio_fr.rs` exits 0, and it fails the run when the output does not contain `NotImplemented`. It does not count the nine failures. Eight passes plus one `NotImplemented` still satisfy it, and so does an unrelated failure beside that string. CodeQL on Rust with `build-mode: none` is required and has passed.
 
 Secrets that the code knows how to refuse stay out of the query string, the card, the error body, and the log line. The session id is random, short-lived, and memory-only. It is still a capability on the wire. That is acceptable on loopback. It is not acceptable on a public bind.
 
@@ -22,7 +22,7 @@ Secrets that the code knows how to refuse stay out of the query string, the card
 Four findings, in the order they should be closed. None of them are fixed in this review.
 
 1. **The banner lies.** `main.rs` binds whatever `HOST` says, then always prints `http://127.0.0.1`. A non-loopback bind looks local. Default `HOST` is loopback, so the default is safe and the report is not.
-2. **Credential headers are ignored, not refused.** `authorization`, `token`, and `session` in the query string are `400`. `Authorization` and `X-N8N-API-KEY` as headers are skipped. The call then fails as a missing profile, after the value has already been read into the request. That is the plaintext-token hole.
+2. **Credential headers are ignored, not refused.** `authorization`, `token`, and `session` in the query string are `400`. `Authorization` and `X-N8N-API-KEY` as headers are skipped. A valid `x-profile` is still admitted, so `POST /api/sessions` for `shell` succeeds with that header present. `401` happens when the profile is missing or invalid, not because the header was seen. The value is still read into the request. That is the plaintext-token hole, and it is wider than a failed login.
 3. **There is no per-caller rate limit.** The server stops at 64 connections and the session table stops at 32. Neither answers `429` or `Retry-After`. A live session can query as fast as the connection cap allows.
 4. **`src/hull.rs` is 1433 lines.** Dispatch, pipes, rollback, sessions, and channel query are one type. The behavior is tested. The next change to it will be hard to review. Split only when a requirement forces a seam, not before.
 
