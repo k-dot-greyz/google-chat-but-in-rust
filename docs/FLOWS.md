@@ -1,6 +1,7 @@
 ---
 id: FLOWS
-status: accepted
+status: reference
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 scenarios: 3

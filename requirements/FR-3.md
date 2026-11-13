@@ -1,6 +1,7 @@
 ---
 id: FR-3
 status: red
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 tests: ["tests/radio_fr.rs"]

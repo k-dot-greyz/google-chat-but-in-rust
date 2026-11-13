@@ -1,13 +1,14 @@
 ---
 id: CONTRIBUTING
-status: accepted
+status: reference
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 toolchain_floor: "1.100.0"
 ---
 
 # Contributing
 
-1. `scripts/verify.sh` before a change is offered. Green tests stay green. `tests/radio_fr.rs` stays red until the requirement it names is actually implemented.
+1. Read [docs/INDEX.md](docs/INDEX.md) and append [docs/LOG.md](docs/LOG.md) if the change records a decision. `scripts/verify.sh` before a change is offered. Green tests stay green. `tests/radio_fr.rs` stays red until the requirement it names is actually implemented.
 2. Requirements live in `requirements/`. A behavior change updates the requirement in the same change as the test.
 3. Dependencies: latest stable, never below the floor in `requirements/TOOLCHAIN.md`. Empty `[dependencies]` is the current state and the preferred state.
 4. Profiles and egress policy are security reviews. See `CODEOWNERS`.

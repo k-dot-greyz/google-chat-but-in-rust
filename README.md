@@ -2,7 +2,7 @@
 
 Fork of [k-dot-greyz/rust-app-core](https://github.com/k-dot-greyz/rust-app-core) at `6523b791`. The hull is the frontend and the gate. This tree does not add a card kind, a pipe step, or a crate.
 
-Start with [docs/BIBLE.md](docs/BIBLE.md). It is the map. The tests and the Rust types win if they disagree with it.
+Start with [docs/INDEX.md](docs/INDEX.md). It is the enforced catalog. [docs/BIBLE.md](docs/BIBLE.md) is the map. [docs/LOG.md](docs/LOG.md) is the append-only reasoning record. The tests and the Rust types win if the prose disagrees.
 
 | | State |
 | --- | --- |

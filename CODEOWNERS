@@ -6,6 +6,8 @@
 /modules/profiles.json @k-dot-greyz
 /modules/policy.json @k-dot-greyz
 /requirements/ @k-dot-greyz
+/docs/INDEX.md @k-dot-greyz
+/docs/LOG.md @k-dot-greyz
 /docs/ @k-dot-greyz
 /AGENTS.md @k-dot-greyz
 /SPEC.md @k-dot-greyz

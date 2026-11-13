@@ -1,7 +1,8 @@
 ## Requirement
 
 - [ ] Requirement id:
-- [ ] Status still matches the tests (red stays red)
+- [ ] Status still matches [docs/INDEX.md](../docs/INDEX.md) and the tests (red stays red)
+- [ ] If this records a decision, [docs/LOG.md](../docs/LOG.md) gained one append-only entry and no past entry was rewritten
 
 ## Floor
 

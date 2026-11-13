@@ -1,6 +1,7 @@
 ---
 id: BIBLE
-status: accepted
+status: reference
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 toolchain_floor: "1.100.0"
@@ -23,6 +24,7 @@ Seven profiles, compiled in from `modules/profiles.json`. Three Workspace princi
 
 | Question | Read |
 | --- | --- |
+| What is reference, and what was decided | `docs/INDEX.md`, `docs/LOG.md` |
 | Card kinds, pipes, routes, airlock | `SPEC.md`, `src/schema.rs`, `src/airlock.rs` |
 | Who may write | `requirements/FR-GATE.md`, `src/gate.rs`, `tests/gate.rs` |
 | The three red behaviors | `requirements/FR-1.md`, `FR-2.md`, `FR-3.md`, `tests/radio_fr.rs`, `src/radio.rs` |

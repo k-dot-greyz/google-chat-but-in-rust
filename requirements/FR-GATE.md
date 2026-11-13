@@ -1,6 +1,7 @@
 ---
 id: FR-GATE
 status: green
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 tests: ["tests/gate.rs", "tests/flow.rs"]

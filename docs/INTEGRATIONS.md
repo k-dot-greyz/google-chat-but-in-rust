@@ -1,6 +1,7 @@
 ---
 id: INTEGRATIONS
-status: accepted
+status: reference
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 toolchain_floor: "1.100.0"

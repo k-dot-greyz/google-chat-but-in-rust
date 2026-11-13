@@ -1,6 +1,7 @@
 ---
 id: ARCHITECTURE
-status: accepted
+status: reference
+index: docs/INDEX.md
 owners: ["@k-dot-greyz"]
 phase: 1
 toolchain_floor: "1.100.0"
@@ -30,6 +31,8 @@ google-chat-but-in-rust/
     hull.rs                 dispatch
     http.rs server.rs       inbound only. default bind is loopback.
   requirements/             the reqs. status green or red matches the tests.
+  docs/INDEX.md              enforced catalog. session entry
+  docs/LOG.md                append-only intent and reasoning
   docs/BIBLE.md              map. tests win if it drifts
   docs/                     whitepaper, this file, flows, plugins, integrations
   tests/
