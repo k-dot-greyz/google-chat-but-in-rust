@@ -97,4 +97,13 @@ Append only. A new decision goes at the bottom with a timestamp. Do not edit a p
 
 **Built.** `src/session.rs`, `gate::identify`, `gate::may_io`, `channels` on the profile table, `POST` and `DELETE /api/sessions`, `QUERY /api/channels/{channel}`, `GET /api/providers`. Tests in `tests/session.rs`. FR-1, FR-2, and FR-3 stay red.
 
+## 2026-11-13T18:24:00+02:00
+
+**Intent.** A module-by-module architectural review, an overall meta review, and a sitrep. Print them and hand them to the GitHub review bot.
+
+**Reasoning.** The review records the tree at `17bc1be`. It does not fix the findings in the same change, because a review that rewrites the code is not a review. The four findings are the bind banner, credential headers that are ignored rather than refused, no per-caller `429`, and `hull.rs` carrying every job. n8n encryption and rate limits stay on the n8n host. This process still does not carry a key.
+
+**Built.** `docs/SITREP.md` and `docs/META.md`.
+
+
 
