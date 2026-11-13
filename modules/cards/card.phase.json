@@ -1,0 +1,12 @@
+{
+  "id": "card.phase",
+  "kind": "stat",
+  "rev": 1,
+  "title": "Phase",
+  "body": {
+    "label": "Phase",
+    "value": 1,
+    "unit": "epoch",
+    "hint": "n8n stays dark until the three functional asserts are green."
+  }
+}

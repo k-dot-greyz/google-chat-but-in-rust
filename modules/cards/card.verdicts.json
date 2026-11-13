@@ -1,0 +1,12 @@
+{
+  "id": "card.verdicts",
+  "kind": "stat",
+  "rev": 1,
+  "title": "Verdicts",
+  "body": {
+    "label": "Verdicts",
+    "value": 0,
+    "unit": "calls",
+    "hint": "Times the airlock was asked."
+  }
+}

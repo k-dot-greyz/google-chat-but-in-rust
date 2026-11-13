@@ -1,0 +1,13 @@
+{
+  "id": "internal.tally",
+  "direction": "internal",
+  "binds": ["card.covers"],
+  "then": [],
+  "steps": [
+    {
+      "op": "inc-stat",
+      "card": "card.covers",
+      "by": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "card.pressure",
+  "kind": "gauge",
+  "rev": 1,
+  "title": "Integrity",
+  "body": {
+    "label": "Hull integrity",
+    "value": 100,
+    "caption": "No egress has left the hull."
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "card.gsuite",
+  "kind": "list",
+  "rev": 1,
+  "title": "Workspace principals",
+  "body": {
+    "items": [
+      {
+        "title": "operator@gsuite.test",
+        "detail": "Human. Approve is a button on this principal only.",
+        "tone": "copper"
+      },
+      {
+        "title": "agent-radio@gsuite.test",
+        "detail": "Chat and the Drive inbox. Cannot call the model route.",
+        "tone": "ink"
+      },
+      {
+        "title": "agent-llm@gsuite.test",
+        "detail": "SSO identity for the OpenAPI model route. hd gsuite.test.",
+        "tone": "sea"
+      }
+    ]
+  }
+}

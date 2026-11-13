@@ -1,0 +1,46 @@
+{
+  "profiles": [
+    {
+      "id": "shell",
+      "pipes": ["ingress.pass", "ingress.trace", "egress.probe"],
+      "verbs": ["mutate-cards"],
+      "git": []
+    },
+    {
+      "id": "operator",
+      "pipes": [],
+      "verbs": ["approve"],
+      "git": []
+    },
+    {
+      "id": "radio",
+      "pipes": [],
+      "verbs": ["ingest"],
+      "git": []
+    },
+    {
+      "id": "llm",
+      "pipes": [],
+      "verbs": ["complete"],
+      "git": []
+    },
+    {
+      "id": "git-zenos",
+      "pipes": [],
+      "verbs": ["file-issue"],
+      "git": [{ "installation": "inst-zenos", "repo": "k-dot-greyz/zenOS" }]
+    },
+    {
+      "id": "git-hull",
+      "pipes": [],
+      "verbs": ["file-issue"],
+      "git": [{ "installation": "inst-hull", "repo": "k-dot-greyz/rust-app-core" }]
+    },
+    {
+      "id": "git-devmaster",
+      "pipes": [],
+      "verbs": ["file-issue"],
+      "git": [{ "installation": "inst-devmaster", "repo": "k-dot-greyz/dev-master" }]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "egress.probe",
+  "direction": "egress",
+  "binds": ["card.log", "card.verdicts", "card.pressure"],
+  "then": [],
+  "steps": [
+    {
+      "op": "airlock",
+      "log": "card.log",
+      "gauge": "card.pressure"
+    },
+    {
+      "op": "inc-stat",
+      "card": "card.verdicts",
+      "by": 1
+    }
+  ]
+}

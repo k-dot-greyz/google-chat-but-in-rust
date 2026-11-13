@@ -1,0 +1,14 @@
+{
+  "id": "ingress.pass",
+  "direction": "ingress",
+  "binds": ["card.pass", "card.plate"],
+  "then": ["internal.tally"],
+  "steps": [
+    {
+      "op": "append-list",
+      "card": "card.pass",
+      "title": "dish",
+      "detail": "note"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "card.hero",
+  "kind": "hero",
+  "rev": 2,
+  "title": "Chat is the radio. The hull keeps the plate.",
+  "body": {
+    "kicker": "Fork of rust-app-core",
+    "lede": "Google Chat is the operator glass. Three Workspace principals, three git installations, one airlock. Phase 1 has no n8n. Approve is a button, never a sentence inside the drop."
+  }
+}

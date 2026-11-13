@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hull">
+  <rect width="64" height="64" fill="#0c0b0a"/>
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#8fbfb0" stroke-width="3"/>
+  <circle cx="32" cy="32" r="15" fill="none" stroke="#e0a07a" stroke-width="2"/>
+  <path d="M32 18v10" stroke="#ebe4d8" stroke-width="2"/>
+</svg>

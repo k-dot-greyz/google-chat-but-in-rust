@@ -1,0 +1,45 @@
+{
+  "id": "card.profiles",
+  "kind": "list",
+  "rev": 1,
+  "title": "Profiles",
+  "body": {
+    "items": [
+      {
+        "title": "shell",
+        "detail": "Deck writes and the three street pipes. Not an approver.",
+        "tone": "ink"
+      },
+      {
+        "title": "operator",
+        "detail": "Approve button only. Cannot file and cannot call the model.",
+        "tone": "copper"
+      },
+      {
+        "title": "radio",
+        "detail": "Ingest only. A drop from this profile cannot approve itself.",
+        "tone": "sea"
+      },
+      {
+        "title": "llm",
+        "detail": "Model route only, and only an approved slice.",
+        "tone": "deny"
+      },
+      {
+        "title": "git-zenos",
+        "detail": "file-issue on inst-zenos for k-dot-greyz/zenOS.",
+        "tone": "copper"
+      },
+      {
+        "title": "git-hull",
+        "detail": "file-issue on inst-hull for k-dot-greyz/rust-app-core.",
+        "tone": "ink"
+      },
+      {
+        "title": "git-devmaster",
+        "detail": "file-issue on inst-devmaster for k-dot-greyz/dev-master.",
+        "tone": "sea"
+      }
+    ]
+  }
+}

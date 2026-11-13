@@ -1,0 +1,14 @@
+{
+  "id": "ingress.trace",
+  "direction": "ingress",
+  "binds": ["card.trace"],
+  "then": [],
+  "steps": [
+    {
+      "op": "append-list",
+      "card": "card.trace",
+      "title": "title",
+      "detail": "detail"
+    }
+  ]
+}

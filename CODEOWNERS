@@ -1,0 +1,12 @@
+# Architecture worktree. One owner until a second reviewer is named.
+* @k-dot-greyz
+
+/src/airlock.rs @k-dot-greyz
+/src/gate.rs @k-dot-greyz
+/modules/profiles.json @k-dot-greyz
+/modules/policy.json @k-dot-greyz
+/requirements/ @k-dot-greyz
+/docs/ @k-dot-greyz
+/AGENTS.md @k-dot-greyz
+/SPEC.md @k-dot-greyz
+/rust-toolchain.toml @k-dot-greyz

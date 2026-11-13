@@ -1,0 +1,26 @@
+[package]
+name = "hull"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+description = "Fork of rust-app-core. Hull deck for a Google Chat radio: cards, pipes, dry-dock airlock."
+license = "MIT"
+publish = false
+
+[lib]
+name = "hull"
+path = "src/lib.rs"
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "hull"
+path = "src/main.rs"
+
+[dependencies]
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "z"
+panic = "abort"
+strip = "symbols"

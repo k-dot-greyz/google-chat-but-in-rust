@@ -1,0 +1,30 @@
+{
+  "id": "card.sinks",
+  "kind": "list",
+  "rev": 1,
+  "title": "Phase 1 sinks",
+  "body": {
+    "items": [
+      {
+        "title": "ledger",
+        "detail": "Canonical row. block id plus sha256. Operator approve before merge.",
+        "tone": "ink"
+      },
+      {
+        "title": "chat-card",
+        "detail": "Pointer only. Verdict, block id, sha. No raw bytes in the space.",
+        "tone": "copper"
+      },
+      {
+        "title": "github-issue",
+        "detail": "Draft from an approved pointer. One repo per installation.",
+        "tone": "sea"
+      },
+      {
+        "title": "llm-route",
+        "detail": "POST the approved slice. Google SSO. hd must be gsuite.test.",
+        "tone": "deny"
+      }
+    ]
+  }
+}

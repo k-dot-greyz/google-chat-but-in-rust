@@ -1,0 +1,12 @@
+{
+  "https_only": true,
+  "max_body": 4096,
+  "content_types": ["application/json"],
+  "allow": [
+    {
+      "origin": "https://hooks.hull.invalid:443",
+      "methods": ["POST"],
+      "pipes": ["egress.probe"]
+    }
+  ]
+}

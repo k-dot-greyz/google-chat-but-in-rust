@@ -1,0 +1,25 @@
+{
+  "id": "card.git",
+  "kind": "list",
+  "rev": 1,
+  "title": "Git installations",
+  "body": {
+    "items": [
+      {
+        "title": "inst-zenos",
+        "detail": "issues:write on k-dot-greyz/zenOS. No workflow scope.",
+        "tone": "copper"
+      },
+      {
+        "title": "inst-hull",
+        "detail": "contents:read on k-dot-greyz/rust-app-core only.",
+        "tone": "ink"
+      },
+      {
+        "title": "inst-devmaster",
+        "detail": "contents:read on k-dot-greyz/dev-master only.",
+        "tone": "sea"
+      }
+    ]
+  }
+}

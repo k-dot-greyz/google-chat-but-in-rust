@@ -1,0 +1,26 @@
+{
+  "id": "card.plate",
+  "kind": "form",
+  "rev": 1,
+  "title": "Plate",
+  "body": {
+    "pipe": "ingress.pass",
+    "submit": "Send it through",
+    "fields": [
+      {
+        "name": "dish",
+        "label": "Dish",
+        "type": "text",
+        "required": true,
+        "max": 48
+      },
+      {
+        "name": "note",
+        "label": "Note",
+        "type": "text",
+        "required": false,
+        "max": 80
+      }
+    ]
+  }
+}

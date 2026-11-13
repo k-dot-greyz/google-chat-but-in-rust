@@ -1,0 +1,12 @@
+{
+  "id": "card.bay",
+  "kind": "media",
+  "rev": 1,
+  "title": "Bay 3",
+  "body": {
+    "medium": "video",
+    "src": "",
+    "caption": "The bay stays dark when the reel is missing.",
+    "fallback": "No reel loaded. The hatch does not turn white."
+  }
+}

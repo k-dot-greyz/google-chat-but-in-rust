@@ -1,0 +1,12 @@
+{
+  "id": "card.covers",
+  "kind": "stat",
+  "rev": 1,
+  "title": "Covers",
+  "body": {
+    "label": "Covers",
+    "value": 0,
+    "unit": "plates",
+    "hint": "Plates that made it onto the pass."
+  }
+}

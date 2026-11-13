@@ -1,0 +1,25 @@
+{
+  "id": "card.fr",
+  "kind": "list",
+  "rev": 1,
+  "title": "Requirements under test",
+  "body": {
+    "items": [
+      {
+        "title": "FR-1 Ingest",
+        "detail": "PNG lands INGESTED. The URL is stored, not fetched. Nothing is rendered.",
+        "tone": "copper"
+      },
+      {
+        "title": "FR-2 Git",
+        "detail": "An issue stays on the named repo. Another installation cannot cross.",
+        "tone": "sea"
+      },
+      {
+        "title": "FR-3 SSO",
+        "detail": "The model route takes an approved slice only. Raw bytes never leave.",
+        "tone": "ink"
+      }
+    ]
+  }
+}

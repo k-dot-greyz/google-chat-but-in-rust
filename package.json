@@ -1,0 +1,15 @@
+{
+  "name": "hull",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 4471",
+    "smoke": "node scripts/wasm-smoke.mjs"
+  },
+  "dependencies": {
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  }
+}
