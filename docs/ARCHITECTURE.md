@@ -32,6 +32,8 @@ google-chat-but-in-rust/
     http.rs server.rs       inbound only. default bind is loopback.
   requirements/             the reqs. status green or red matches the tests.
   docs/INDEX.md              enforced catalog. session entry
+  docs/CI.md                 review checks and the metrics they print
+  .github/workflows/        verify and CodeQL
   docs/LOG.md                append-only intent and reasoning
   docs/BIBLE.md              map. tests win if it drifts
   docs/                     whitepaper, this file, flows, plugins, integrations

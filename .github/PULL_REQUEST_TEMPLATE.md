@@ -6,7 +6,8 @@
 
 ## Floor
 
-- [ ] `scripts/verify-toolchain.sh` printed gucci
+- [ ] `scripts/verify.sh` is the check this pull request must pass
+- [ ] Auth changes still go through `gate::admit` and `tests/gate.rs`
 - [ ] Latest Rust release notes were read. Floor bumped in this PR if stable moved.
 - [ ] No new crate, or the crate's floor and the release note are named here
 

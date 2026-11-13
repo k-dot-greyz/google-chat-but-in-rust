@@ -160,15 +160,15 @@ fn parse_table(text: &str) -> Result<Vec<Profile>, String> {
 
 fn parse_profile(value: &Value) -> Result<Profile, String> {
     let pairs = object(value, &["id", "pipes", "verbs", "git"])?;
-    let id = req_str(&pairs, "id")?;
+    let id = req_str(pairs, "id")?;
     if !valid_id(id) {
         return Err(format!("bad profile id {id}"));
     }
     Ok(Profile {
         id: id.to_string(),
-        pipes: req_strings(&pairs, "pipes", valid_pipe)?,
-        verbs: req_strings(&pairs, "verbs", valid_id)?,
-        git: req_grants(&pairs)?,
+        pipes: req_strings(pairs, "pipes", valid_pipe)?,
+        verbs: req_strings(pairs, "verbs", valid_id)?,
+        git: req_grants(pairs)?,
     })
 }
 
@@ -185,8 +185,8 @@ fn req_grants(pairs: &[(String, Value)]) -> Result<Vec<GitGrant>, String> {
         .iter()
         .map(|item| {
             let fields = object(item, &["installation", "repo"])?;
-            let installation = req_str(&fields, "installation")?;
-            let repo = req_str(&fields, "repo")?;
+            let installation = req_str(fields, "installation")?;
+            let repo = req_str(fields, "repo")?;
             if !valid_id(installation) || !valid_repo(repo) {
                 return Err("bad git grant".into());
             }

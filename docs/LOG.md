@@ -80,3 +80,12 @@ Append only. A new decision goes at the bottom with a timestamp. Do not edit a p
 **Reasoning.** A bible nobody is required to open does not enforce anything. The index is the catalog and the session entry. The log is append-only so a later session can see why serde, UUIDv7 cards, n8n, and a blockchain were refused. Red requirements stay red. Reference status freezes settled decisions, not unfinished tests.
 
 **Built.** This file and `docs/INDEX.md`. Agent instructions, code owners, and the catalog point here.
+
+## 2026-11-13T17:40:00+02:00
+
+**Intent.** Put CodeQL or an equivalent on pull requests, with a testing methodology and metrics for the bible workflow, type safety, and auth.
+
+**Reasoning.** CodeQL's current language list includes Rust, editions 2021 and 2024, and the `none` build mode is supported for Rust, so the scan does not need a second cargo build. That covers generic Rust defects. It does not know the profile allowlist, so it is not the auth check. Auth stays the gate tests plus a static count: seven profiles, and `admit_request` on create, patch, delete, and push. Type safety for this tree is `cargo clippy -- -D warnings` on edition 2024, not a generated JSON Schema. The red FR suite is a metric of its own: the check fails if those tests pass or if they fail for any reason other than `NotImplemented`. A required second reviewer was not turned on, because the only code owner cannot approve their own pull request.
+
+**Built.** `scripts/ci-checks.sh`, `scripts/verify.sh` now runs those checks plus fmt and clippy, `docs/CI.md`, `.github/workflows/verify.yml`, `.github/workflows/codeql.yml`. Clippy's needless-borrow hits in `src/gate.rs` were fixed so the deny-warnings gate is honest.
+

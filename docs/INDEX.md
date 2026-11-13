@@ -1,6 +1,7 @@
 ---
 id: INDEX
 status: reference
+index: docs/INDEX.md
 enforced_by: AGENTS.md
 owners: ["@k-dot-greyz"]
 phase: 1
@@ -33,6 +34,7 @@ If this index, the bible, and a test disagree, the test wins. Then fix the index
 
 | Path | Status | What it is |
 | --- | --- | --- |
+| [docs/CI.md](CI.md) | reference | Review methodology. `scripts/verify.sh`, CodeQL. |
 | [docs/LOG.md](LOG.md) | reference | Append-only intent and reasoning log. |
 | [docs/BIBLE.md](BIBLE.md) | reference | Big picture, task order, test prose, open changes. |
 | [docs/WHITEPAPER.md](WHITEPAPER.md) | reference | Why the hull is the record and Chat is the glass. |
@@ -64,7 +66,9 @@ If this index, the bible, and a test disagree, the test wins. Then fix the index
 | `src/radio.rs` | red | Factory is real. Four functions are `NotImplemented`. |
 | `tests/flow.rs` `tests/gate.rs` `tests/radio_factory.rs` `tests/serve.rs` | green | Must stay green. |
 | `tests/radio_fr.rs` | red | Must keep failing on `NotImplemented` until the requirement is real. |
-| `scripts/verify.sh` | reference | Green suite passes and the FR suite still fails. |
+| `scripts/verify.sh` | reference | Green suite, red FR suite, fmt, clippy, reference and auth metrics. |
+| `.github/workflows/verify.yml` | reference | Pull request check named `verify`. |
+| `.github/workflows/codeql.yml` | reference | Rust CodeQL, build mode `none`, `security-extended`. |
 
 Not in the tree, on purpose: `program.json`, `integrations.json`, a SQLite file, a crate, an n8n node.
 
@@ -83,7 +87,8 @@ Re-read the latest Rust release at the start of a session. Append [docs/LOG.md](
 | SQLite 3.54.1 | [release log](https://www.sqlite.org/releaselog/3_54_1.html) | 2026-10-16. Heap-buffer overflow fix on 32-bit. |
 | STRICT tables | [sqlite.org/stricttables](https://www.sqlite.org/stricttables.html) | Required if a table is added. |
 | WAL | [sqlite.org/wal](https://www.sqlite.org/wal.html) | File databases only. Not the in-memory test connection. |
-| Upstream hull | [k-dot-greyz/rust-app-core](https://github.com/k-dot-greyz/rust-app-core) | Fork point `6523b791`. Public template. |
+| CodeQL languages | [supported languages](https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/) | Rust, editions 2021 and 2024, is a supported compiled language. |
+| CodeQL Rust build | [compiled languages](https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages) | `build-mode: none` is supported for Rust. The workflow uses it. |
 | This repo | [k-dot-greyz/google-chat-but-in-rust](https://github.com/k-dot-greyz/google-chat-but-in-rust) | Public `main`. No pull request; there was no base branch. |
 
 ## Decisions held by this index
@@ -96,5 +101,6 @@ Re-read the latest Rust release at the start of a session. Append [docs/LOG.md](
 - The next cut is in-memory FR-1. rusqlite 0.42.0 waits until that is true.
 - A later log is one insert-only `STRICT` transition table. Wall-clock time is not in the hash. The tip hash is the only future anchor, and it stays dry-docked.
 - No blockchain, merkle tree, wallet, or empty config file ahead of a parser.
+- Pull requests run `scripts/verify.sh` and CodeQL (`security-extended`, Rust, no build). Clippy `-D warnings` is the type gate. The gate tests are the auth gate.
 
 The reasoning for each line is in [docs/LOG.md](LOG.md), in order.

@@ -32,17 +32,16 @@ fn factory_phase1_three_git_three_gsuite_no_n8n() {
     let repos: Vec<_> = world.git.iter().map(|g| g.repo).collect();
     assert_eq!(repos.len(), 3);
     assert!(repos.windows(2).all(|pair| pair[0] != pair[1]));
-    assert!(
-        world
-            .git
+    assert!(world.git.iter().all(|g| {
+        !g.scopes
             .iter()
-            .all(|g| !g.scopes.iter().any(|scope| *scope == "workflow" || *scope == "admin"))
-    );
+            .any(|scope| *scope == "workflow" || *scope == "admin")
+    }));
     assert_eq!(
         world.sinks,
         vec!["ledger", "chat-card", "github-issue", "llm-route"]
     );
-    assert!(!world.sinks.iter().any(|sink| *sink == "n8n"));
+    assert!(!world.sinks.contains(&"n8n"));
     let plate = world.screenshot();
     assert!(plate.bytes.starts_with(PNG_MAGIC));
     assert!(plate.bytes.len() <= 512_000);
