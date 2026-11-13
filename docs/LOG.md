@@ -89,3 +89,12 @@ Append only. A new decision goes at the bottom with a timestamp. Do not edit a p
 
 **Built.** `scripts/ci-checks.sh`, `scripts/verify.sh` now runs those checks plus fmt and clippy, `docs/CI.md`, `.github/workflows/verify.yml`, `.github/workflows/codeql.yml`. Clippy's needless-borrow hits in `src/gate.rs` were fixed so the deny-warnings gate is honest.
 
+## 2026-11-13T17:58:00+02:00
+
+**Intent.** Session management, persistence, group and channel permissions for read, edit, write, and query, plus the HTTP QUERY method, response codes, server logs, and auth providers. Retry and fallback were asked for.
+
+**Reasoning.** `x-profile` stays a duty label on the old write routes. A session is a separate in-memory row, `ses_` plus 16 random bytes, bound to one profile and one channel for fifteen minutes. It is not stored, and the log line does not print it. HTTP QUERY (the safe method with a body) is how a filter is sent without putting it in the URL. A query string on that route is 400. TLS is not terminated in the binary: that would be a crate, and the listener is loopback. The only provider is `local`. `google` returns 501 and does not mint a local session instead. A session whose `x-profile` disagrees returns 401 and no cards. Edit and write still require `mutate-cards`. Read and query are channel checks. Deck GETs stay open so the shell still renders without a session. `retry` is false. A full session table returns 503 and does not evict a live row. A module reload keeps the table. A process restart does not.
+
+**Built.** `src/session.rs`, `gate::identify`, `gate::may_io`, `channels` on the profile table, `POST` and `DELETE /api/sessions`, `QUERY /api/channels/{channel}`, `GET /api/providers`. Tests in `tests/session.rs`. FR-1, FR-2, and FR-3 stay red.
+
+

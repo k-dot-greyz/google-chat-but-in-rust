@@ -26,7 +26,8 @@ google-chat-but-in-rust/
     profiles.json           compiled-in write allowlist
   src/
     airlock.rs              egress. hull class beats the allowlist. dry dock.
-    gate.rs                 profile scope for writes
+    gate.rs                 profile scope for writes. identify, may_io.
+    session.rs              memory sessions. one profile, one channel.
     radio.rs                phase-1 contract. factory is real. FR behavior is not.
     hull.rs                 dispatch
     http.rs server.rs       inbound only. default bind is loopback.

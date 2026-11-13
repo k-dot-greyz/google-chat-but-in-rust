@@ -22,6 +22,11 @@ fn profile_table_is_seven_and_closed() {
         .find(|profile| profile.id == "shell")
         .unwrap();
     assert!(shell.verbs.iter().any(|verb| verb == "mutate-cards"));
+    assert!(shell.channels == ["deck"]);
+    assert!(gate::may_io(shell, "deck", gate::Io::Query));
+    assert!(gate::may_io(shell, "deck", gate::Io::Read));
+    assert!(gate::may_io(shell, "deck", gate::Io::Edit));
+    assert!(!gate::may_io(shell, "other", gate::Io::Read));
     assert!(!shell.verbs.iter().any(|verb| verb == "approve"));
     let operator = profiles.iter().find(|p| p.id == "operator").unwrap();
     assert!(operator.verbs == ["approve"]);

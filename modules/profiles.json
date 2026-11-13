@@ -3,43 +3,50 @@
     {
       "id": "shell",
       "pipes": ["ingress.pass", "ingress.trace", "egress.probe"],
-      "verbs": ["mutate-cards"],
+      "verbs": ["mutate-cards", "read", "query"],
+      "channels": ["deck"],
       "git": []
     },
     {
       "id": "operator",
       "pipes": [],
       "verbs": ["approve"],
+      "channels": [],
       "git": []
     },
     {
       "id": "radio",
       "pipes": [],
       "verbs": ["ingest"],
+      "channels": [],
       "git": []
     },
     {
       "id": "llm",
       "pipes": [],
       "verbs": ["complete"],
+      "channels": [],
       "git": []
     },
     {
       "id": "git-zenos",
       "pipes": [],
       "verbs": ["file-issue"],
+      "channels": [],
       "git": [{ "installation": "inst-zenos", "repo": "k-dot-greyz/zenOS" }]
     },
     {
       "id": "git-hull",
       "pipes": [],
       "verbs": ["file-issue"],
+      "channels": [],
       "git": [{ "installation": "inst-hull", "repo": "k-dot-greyz/rust-app-core" }]
     },
     {
       "id": "git-devmaster",
       "pipes": [],
       "verbs": ["file-issue"],
+      "channels": [],
       "git": [{ "installation": "inst-devmaster", "repo": "k-dot-greyz/dev-master" }]
     }
   ]

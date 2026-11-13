@@ -17,7 +17,15 @@ pub struct Profile {
     pub id: String,
     pub pipes: Vec<String>,
     pub verbs: Vec<String>,
+    pub channels: Vec<String>,
     pub git: Vec<GitGrant>,
+}
+
+pub enum Io {
+    Read,
+    Edit,
+    Write,
+    Query,
 }
 
 pub enum Need<'a> {
@@ -37,12 +45,7 @@ pub fn profiles() -> Vec<Profile> {
 }
 
 pub fn admit(request: &Request, need: Need<'_>) -> Result<Profile, GateFault> {
-    reject_query_secrets(request)?;
-    let id = profile_header(request)?;
-    let profile = profiles()
-        .into_iter()
-        .find(|profile| profile.id == id)
-        .ok_or_else(unknown)?;
+    let profile = identify(request)?;
     match need {
         Need::Cards => {
             if !profile.verbs.iter().any(|verb| verb == "mutate-cards") {
@@ -59,12 +62,33 @@ pub fn admit(request: &Request, need: Need<'_>) -> Result<Profile, GateFault> {
     Ok(profile)
 }
 
+pub fn identify(request: &Request) -> Result<Profile, GateFault> {
+    reject_query_secrets(request)?;
+    let id = profile_header(request)?;
+    profiles()
+        .into_iter()
+        .find(|profile| profile.id == id)
+        .ok_or_else(unknown)
+}
+
 pub fn may_file(profile: &Profile, installation: &str, repo: &str) -> bool {
     profile.verbs.iter().any(|verb| verb == "file-issue")
         && profile
             .git
             .iter()
             .any(|grant| grant.installation == installation && grant.repo == repo)
+}
+
+pub fn may_io(profile: &Profile, channel: &str, io: Io) -> bool {
+    if !profile.channels.iter().any(|held| held == channel) {
+        return false;
+    }
+    let verb = match io {
+        Io::Read => "read",
+        Io::Edit | Io::Write => "mutate-cards",
+        Io::Query => "query",
+    };
+    profile.verbs.iter().any(|held| held == verb)
 }
 
 fn reject_query_secrets(request: &Request) -> Result<(), GateFault> {
@@ -77,6 +101,8 @@ fn reject_query_secrets(request: &Request) -> Result<(), GateFault> {
         "id_token",
         "code",
         "secret",
+        "session",
+        "x-session",
     ];
     let leaked = request.query.iter().any(|(key, _)| {
         let key = key.to_ascii_lowercase();
@@ -159,7 +185,7 @@ fn parse_table(text: &str) -> Result<Vec<Profile>, String> {
 }
 
 fn parse_profile(value: &Value) -> Result<Profile, String> {
-    let pairs = object(value, &["id", "pipes", "verbs", "git"])?;
+    let pairs = object(value, &["id", "pipes", "verbs", "channels", "git"])?;
     let id = req_str(pairs, "id")?;
     if !valid_id(id) {
         return Err(format!("bad profile id {id}"));
@@ -168,6 +194,7 @@ fn parse_profile(value: &Value) -> Result<Profile, String> {
         id: id.to_string(),
         pipes: req_strings(pairs, "pipes", valid_pipe)?,
         verbs: req_strings(pairs, "verbs", valid_id)?,
+        channels: req_strings(pairs, "channels", valid_id)?,
         git: req_grants(pairs)?,
     })
 }

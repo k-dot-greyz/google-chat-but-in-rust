@@ -151,6 +151,26 @@ pub fn routes() -> &'static [RouteDef] {
             path: "/api/sync/delta",
             summary: "Patches since a cursor.",
         },
+        RouteDef {
+            method: "POST",
+            path: "/api/sessions",
+            summary: "Mint a local session for one channel. No remote provider.",
+        },
+        RouteDef {
+            method: "DELETE",
+            path: "/api/sessions",
+            summary: "Revoke the session named by x-session.",
+        },
+        RouteDef {
+            method: "QUERY",
+            path: "/api/channels/{channel}",
+            summary: "Read card fields for the session's channel. The filter is the body.",
+        },
+        RouteDef {
+            method: "GET",
+            path: "/api/providers",
+            summary: "Auth providers. local does not send.",
+        },
     ]
 }
 
